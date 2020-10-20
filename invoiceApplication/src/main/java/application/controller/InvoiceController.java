@@ -1,9 +1,11 @@
 package application.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,10 +45,42 @@ public class InvoiceController {
 			@ApiParam("tax") @RequestParam Long tax,
 			@ApiParam("discount") @RequestParam Long discount,
 			@ApiParam("total") @RequestParam Long total) {
-		List<Invoice> invoiceList = invoiceRepository.findByInvoiceCode(invoiceCode);
-		if(invoiceList.size() != 0) throw new InvoiceException("Invalid invoiceCode supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceCode);
+		if(invoiceOptional.isPresent()) throw new InvoiceException("invoiceCode supplied is exits", HttpStatus.UNPROCESSABLE_ENTITY);
 		return invoiceService.create(invoiceCode, customerName, customerEmail, productList, subTotal, tax, discount,
 				total);
+	}
+
+	@PostMapping("/update")
+	public String update(//
+			@ApiParam("invoiceCode") @RequestParam String invoiceCode,
+			@ApiParam("customerName") @RequestParam String customerName,
+			@ApiParam("customerEmail") @RequestParam String customerEmail,
+			@ApiParam("productList") @RequestBody List<ProductDataDTO> productList,
+			@ApiParam("subTotal") @RequestParam Long subTotal, 
+			@ApiParam("tax") @RequestParam Long tax,
+			@ApiParam("discount") @RequestParam Long discount,
+			@ApiParam("total") @RequestParam Long total) {
+		return invoiceService.update(invoiceCode, customerName, customerEmail, productList, subTotal, tax, discount,
+				total);
+	}
+
+	@GetMapping("/get-all")
+	public String getAll(//
+			@ApiParam("invoiceCode") @RequestParam String invoiceCode,
+			@ApiParam("customerName") @RequestParam String customerName,
+			@ApiParam("customerEmail") @RequestParam String customerEmail,
+			@ApiParam("productList") @RequestBody List<ProductDataDTO> productList,
+			@ApiParam("subTotal") @RequestParam Long subTotal, 
+			@ApiParam("tax") @RequestParam Long tax,
+			@ApiParam("discount") @RequestParam Long discount,
+			@ApiParam("total") @RequestParam Long total,
+			@ApiParam("pageNumber") @RequestParam Integer pageNumber,
+			@ApiParam("pageSize") @RequestParam Integer pageSize,
+			@ApiParam("sort") @RequestParam Integer sort
+			) {
+		return invoiceService.getAll(invoiceCode, customerName, customerEmail, productList, subTotal, tax, discount,
+				total, pageNumber, pageSize, sort);
 	}
 
 }
