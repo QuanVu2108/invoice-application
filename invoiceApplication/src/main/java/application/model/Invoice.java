@@ -19,7 +19,7 @@ public class Invoice {
 
 	  @Id
 	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Integer id;
+	  private Long id;
 
 	  @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
 	  @Column(name = "invoice_code", unique = true, nullable = false)
@@ -46,11 +46,11 @@ public class Invoice {
 	  @Column(name = "total")
 	  private Long total;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

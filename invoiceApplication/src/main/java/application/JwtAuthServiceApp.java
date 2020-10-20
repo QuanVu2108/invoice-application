@@ -12,40 +12,44 @@ import org.springframework.context.annotation.Bean;
 
 import application.model.Role;
 import application.model.User;
+import application.repository.UserRepository;
 import application.service.UserService;
 
 @SpringBootApplication
 public class JwtAuthServiceApp implements CommandLineRunner {
 
-  @Autowired
-  UserService userService;
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	UserRepository userRepository;
 
-  public static void main(String[] args) {
-    SpringApplication.run(JwtAuthServiceApp.class, args);
-  }
+	public static void main(String[] args) {
+		SpringApplication.run(JwtAuthServiceApp.class, args);
+	}
 
-  @Bean
-  public ModelMapper modelMapper() {
-    return new ModelMapper();
-  }
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 
-  @Override
-  public void run(String... params) throws Exception {
-    User admin = new User();
-    admin.setUsername("admin");
-    admin.setPassword("admin");
-    admin.setEmail("admin@email.com");
-    admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
+	@Override
+	public void run(String... params) throws Exception {
+		if(userRepository.findByUsername("admin") == null) {
+			User admin = new User();
+			admin.setUsername("admin");
+			admin.setPassword("admin");
+			admin.setEmail("admin@email.com");
+			admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
+			userService.signup(admin);
 
-    userService.signup(admin);
-
-    User client = new User();
-    client.setUsername("client");
-    client.setPassword("client");
-    client.setEmail("client@email.com");
-    client.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
-
-    userService.signup(client);
-  }
+			User client = new User();
+			client.setUsername("client");
+			client.setPassword("client");
+			client.setEmail("client@email.com");
+			client.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
+			userService.signup(client);
+		}
+	}
 
 }

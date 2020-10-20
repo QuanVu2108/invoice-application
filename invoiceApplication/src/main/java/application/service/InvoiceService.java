@@ -35,20 +35,25 @@ public class InvoiceService {
 				Product product = new Product();
 				product = modelMapper.map(productDataDTO, Product.class);
 				product.setInvoice(invoice);
-				productRepository.save(product);
 				productList.add(product);
 			}
 		}
 		invoice.setInvoiceCode(invoiceCode);
 		invoice.setCustomerName(customerName);
 		invoice.setCustomerEmail(customerEmail);
-		invoice.setProductList(productList);
 		invoice.setSubTotal(subTotal);
 		invoice.setTax(tax);
 		invoice.setDiscount(discount);
 		invoice.setTotal(total);
 		invoiceRepository.save(invoice);
-		return null;
+		
+		for(int i = 0; i < productList.size(); i++) {
+			Product product = productList.get(i);
+			product.setInvoice(invoice);
+			productRepository.save(product);
+		}
+		
+		return "OK";
 	}
 
 }
