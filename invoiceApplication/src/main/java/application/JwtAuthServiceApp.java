@@ -14,6 +14,7 @@ import application.model.Role;
 import application.model.User;
 import application.repository.UserRepository;
 import application.service.UserService;
+import application.service.impl.UserServiceImpl;
 
 @SpringBootApplication
 public class JwtAuthServiceApp implements CommandLineRunner {

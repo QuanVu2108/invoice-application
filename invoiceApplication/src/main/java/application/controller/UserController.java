@@ -18,6 +18,7 @@ import application.dto.UserDataDTO;
 import application.dto.UserResponseDTO;
 import application.model.User;
 import application.service.UserService;
+import application.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,6 +46,18 @@ public class UserController {
 			@ApiParam("Username") @RequestParam String username, //
 			@ApiParam("Password") @RequestParam String password) {
 		return userService.signin(username, password);
+	}
+
+	@GetMapping(value = "/me")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+	@ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = {
+			@Authorization(value = "apiKey") })
+	@ApiResponses(value = { //
+			@ApiResponse(code = 400, message = "Something went wrong"), //
+			@ApiResponse(code = 403, message = "Access denied"), //
+			@ApiResponse(code = 500, message = "Expired or invalid JWT token") })
+	public UserResponseDTO whoami(HttpServletRequest req) {
+		return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
 	}
 
 //  @PostMapping("/signup")
@@ -81,18 +94,6 @@ public class UserController {
 //  public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
 //    return modelMapper.map(userService.search(username), UserResponseDTO.class);
 //  }
-
-	@GetMapping(value = "/me")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-	@ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = {
-			@Authorization(value = "apiKey") })
-	@ApiResponses(value = { //
-			@ApiResponse(code = 400, message = "Something went wrong"), //
-			@ApiResponse(code = 403, message = "Access denied"), //
-			@ApiResponse(code = 500, message = "Expired or invalid JWT token") })
-	public UserResponseDTO whoami(HttpServletRequest req) {
-		return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
-	}
 
 //  @GetMapping("/refresh")
 //  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
