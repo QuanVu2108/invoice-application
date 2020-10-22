@@ -1,5 +1,6 @@
 package application.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -45,6 +46,9 @@ public class Invoice {
 
 	  @Column(name = "total")
 	  private Long total;
+
+	  @Column(name = "created_date")
+	  private Long createdDate;
 
 	public Long getId() {
 		return id;
@@ -116,6 +120,14 @@ public class Invoice {
 
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
+	}
+
+	public Long getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Long createdDate) {
+		this.createdDate = createdDate;
 	}
 
 }

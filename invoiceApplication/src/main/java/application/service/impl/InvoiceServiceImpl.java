@@ -1,7 +1,12 @@
 package application.service.impl;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +42,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 	@Override
 	public String create(String invoiceCode, String customerName, String customerEmail,
 			List<ProductDataDTO> productDataDTOList, Long subTotal, Long tax, Long discount, Long total) {
+		
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
+        Long date = zdt.toInstant().toEpochMilli();
+
 		Invoice invoice = new Invoice();
 		List<Product> productList = new ArrayList<Product>();
 		if (productDataDTOList.size() != 0) {
@@ -54,6 +64,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		invoice.setTax(tax);
 		invoice.setDiscount(discount);
 		invoice.setTotal(total);
+		invoice.setCreatedDate(date);
 		invoiceRepository.save(invoice);
 
 		for (int i = 0; i < productList.size(); i++) {
