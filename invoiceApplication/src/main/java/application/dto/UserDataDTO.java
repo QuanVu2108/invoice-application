@@ -6,46 +6,46 @@ import application.model.Role;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UserDataDTO {
-  
-  @ApiModelProperty(position = 0)
-  private String username;
-  @ApiModelProperty(position = 1)
-  private String email;
-  @ApiModelProperty(position = 2)
-  private String password;
-  @ApiModelProperty(position = 3)
-  List<Role> roles;
 
-  public String getUsername() {
-    return username;
-  }
+	@ApiModelProperty(position = 2)
+	private String companyName;
+	@ApiModelProperty(position = 3)
+	private String email;
+	@ApiModelProperty(position = 4)
+	private String address;
+	@ApiModelProperty(position = 5)
+	private String phoneNumber;
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+	public String getCompanyName() {
+		return companyName;
+	}
 
-  public String getEmail() {
-    return email;
-  }
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public String getEmail() {
+		return email;
+	}
 
-  public String getPassword() {
-    return password;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+	public String getAddress() {
+		return address;
+	}
 
-  public List<Role> getRoles() {
-    return roles;
-  }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 }

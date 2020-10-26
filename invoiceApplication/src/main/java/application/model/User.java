@@ -14,61 +14,94 @@ import javax.validation.constraints.Size;
 @Entity
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
-  @Column(name = "user_name", unique = true, nullable = false)
-  private String username;
+	@Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
+	@Column(name = "user_name", unique = true, nullable = false)
+	private String username;
 
-  @Column(name = "email", unique = true, nullable = false)
-  private String email;
+	@Column(name = "email", unique = true, nullable = false)
+	private String email;
 
-  @Size(min = 8, message = "Minimum password length: 8 characters")
-  private String password;
+	@Column(name = "company_name")
+	private String companyName;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  List<Role> roles;
+	@Column(name = "address")
+	private String address;
 
-  public Long getId() {
-    return id;
-  }
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+	@Size(min = 8, message = "Minimum password length: 8 characters")
+	private String password;
 
-  public String getUsername() {
-    return username;
-  }
+	@ElementCollection(fetch = FetchType.EAGER)
+	List<Role> roles;
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+	public Long getId() {
+		return id;
+	}
 
-  public String getEmail() {
-    return email;
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public String getUsername() {
+		return username;
+	}
 
-  public String getPassword() {
-    return password;
-  }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+	public String getEmail() {
+		return email;
+	}
 
-  public List<Role> getRoles() {
-    return roles;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 
 }

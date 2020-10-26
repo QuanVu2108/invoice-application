@@ -3,6 +3,7 @@ package application.dto;
 public class ProductDataDTO {
 	private String name;
 	private Long price;
+	private String description;
 	private String currencyUnit;
 	private Long quantity;
 

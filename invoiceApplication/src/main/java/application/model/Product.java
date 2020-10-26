@@ -28,6 +28,9 @@ public class Product {
 	@Column(name = "currency_unit")
 	private String currencyUnit;
 
+	@Column(name = "description")
+	private String description;
+
 	@Column(name = "quantity")
 	private Long quantity;
 
@@ -35,6 +38,9 @@ public class Product {
 	@JoinColumn(name = "invoice_id")
 	@JsonIgnore
 	private Invoice invoice;
+
+	@Column(name = "active")
+	private boolean active;
 
 	public Long getId() {
 		return id;
@@ -50,6 +56,14 @@ public class Product {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Long getPrice() {
@@ -82,6 +96,14 @@ public class Product {
 
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

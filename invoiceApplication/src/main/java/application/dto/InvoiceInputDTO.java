@@ -2,26 +2,15 @@ package application.dto;
 
 import java.util.List;
 
-import application.model.Product;
-
-public class InvoiceDTO {
-	private Long id;
+public class InvoiceInputDTO {
 	private String invoiceCode;
 	private CustomerDTO customer;
 	private List<ProductDataDTO> productList;
-	private AmountDTO amount;
 	private String note;
 	private String paymentTerm;
+	private AmountDTO amount;
 	private Long issueDate;
 	private Long dueDate;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getInvoiceCode() {
 		return invoiceCode;
@@ -47,14 +36,6 @@ public class InvoiceDTO {
 		this.productList = productList;
 	}
 
-	public AmountDTO getAmount() {
-		return amount;
-	}
-
-	public void setAmount(AmountDTO amount) {
-		this.amount = amount;
-	}
-
 	public String getNote() {
 		return note;
 	}
@@ -69,6 +50,14 @@ public class InvoiceDTO {
 
 	public void setPaymentTerm(String paymentTerm) {
 		this.paymentTerm = paymentTerm;
+	}
+
+	public AmountDTO getAmount() {
+		return amount;
+	}
+
+	public void setAmount(AmountDTO amount) {
+		this.amount = amount;
 	}
 
 	public Long getIssueDate() {

@@ -26,6 +26,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import application.dto.InvoiceDTO;
+import application.dto.InvoiceInputDTO;
 import application.dto.ProductDataDTO;
 import application.exception.InvoiceException;
 import application.model.Invoice;
@@ -47,41 +48,25 @@ public class InvoiceController {
 
 	@PostMapping("/create")
 	public String create(//
-			@ApiParam("invoiceCode") @RequestParam String invoiceCode,
-			@ApiParam("customerName") @RequestParam String customerName,
-			@ApiParam("customerEmail") @RequestParam String customerEmail,
-			@ApiParam("productList") @RequestBody List<ProductDataDTO> productList,
-			@ApiParam("subTotal") @RequestParam Long subTotal, 
-			@ApiParam("tax") @RequestParam Long tax,
-			@ApiParam("discount") @RequestParam Long discount,
-			@ApiParam("total") @RequestParam Long total) {
-		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceCode);
+			@ApiParam("invoiceCode") @RequestBody InvoiceInputDTO invoiceInput) {
+		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode());
 		if(invoiceOptional.isPresent()) throw new InvoiceException("invoiceCode supplied is exits", HttpStatus.UNPROCESSABLE_ENTITY);
-		return invoiceService.create(invoiceCode, customerName, customerEmail, productList, subTotal, tax, discount,
-				total);
+		return invoiceService.create(invoiceInput);
 	}
 
 	@PostMapping("/update")
 	public String update(//
-			@ApiParam("invoiceCode") @RequestParam String invoiceCode,
-			@ApiParam("customerName") @RequestParam String customerName,
-			@ApiParam("customerEmail") @RequestParam String customerEmail,
-			@ApiParam("productList") @RequestBody List<ProductDataDTO> productList,
-			@ApiParam("subTotal") @RequestParam Long subTotal, 
-			@ApiParam("tax") @RequestParam Long tax,
-			@ApiParam("discount") @RequestParam Long discount,
-			@ApiParam("total") @RequestParam Long total) {
-		return invoiceService.update(invoiceCode, customerName, customerEmail, productList, subTotal, tax, discount,
-				total);
+			@ApiParam("invoiceCode") @RequestBody InvoiceInputDTO invoiceInput) {
+		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode());
+		if(!invoiceOptional.isPresent()) throw new InvoiceException("invoiceCode supplied is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
+		return invoiceService.update(invoiceInput);
 	}
 
 	@GetMapping("/get-all")
 	public List<InvoiceDTO> getAll(//
-			@ApiParam("invoiceCode") @RequestParam(name = "invoiceCode", required = false, defaultValue = "") String invoiceCode,
-			@ApiParam("customerName") @RequestParam(name = "customerName", required = false, defaultValue = "") String customerName,
-			@ApiParam("customerEmail") @RequestParam(name = "customerEmail", required = false, defaultValue = "") String customerEmail
+			@ApiParam("invoiceCode") @RequestParam(name = "invoiceCode", required = false, defaultValue = "") String invoiceCode
 			) {
-		return invoiceService.getAll(invoiceCode, customerName, customerEmail);
+		return invoiceService.getAll(invoiceCode);
 	}
 
 	@RequestMapping(value = "/export-pdf", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)

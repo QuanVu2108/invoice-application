@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import application.constant.UserInfoConstant;
 import application.model.Role;
 import application.model.User;
 import application.repository.UserRepository;
@@ -38,18 +39,18 @@ public class JwtAuthServiceApp implements CommandLineRunner {
 	public void run(String... params) throws Exception {
 		if(userRepository.findByUsername("admin") == null) {
 			User admin = new User();
-			admin.setUsername("admin");
-			admin.setPassword("admin");
+			admin.setUsername(UserInfoConstant.USER);
+			admin.setPassword(UserInfoConstant.PASSWORD);
 			admin.setEmail("admin@email.com");
 			admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 			userService.signup(admin);
 
-			User client = new User();
-			client.setUsername("client");
-			client.setPassword("client");
-			client.setEmail("client@email.com");
-			client.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
-			userService.signup(client);
+//			User client = new User();
+//			client.setUsername("client");
+//			client.setPassword("client");
+//			client.setEmail("client@email.com");
+//			client.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
+//			userService.signup(client);
 		}
 	}
 

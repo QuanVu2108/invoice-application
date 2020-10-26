@@ -60,6 +60,16 @@ public class UserController {
 		return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
 	}
 
+	@PostMapping("/update-info")
+	@ApiOperation(value = "${UserController.update-info}")
+	@ApiResponses(value = { //
+			@ApiResponse(code = 400, message = "Something went wrong"), //
+			@ApiResponse(code = 422, message = "Invalid username/password supplied") })
+	public UserResponseDTO updateInfo(//
+			@ApiParam("Username") @RequestBody UserDataDTO userInfo) {
+		return userService.updateInfo(userInfo);
+	}
+
 //  @PostMapping("/signup")
 //  @ApiOperation(value = "${UserController.signup}")
 //  @ApiResponses(value = {//

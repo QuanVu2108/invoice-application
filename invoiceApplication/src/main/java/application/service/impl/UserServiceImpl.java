@@ -1,7 +1,10 @@
 package application.service.impl;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +13,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import application.constant.UserInfoConstant;
+import application.dto.UserDataDTO;
+import application.dto.UserResponseDTO;
 import application.exception.CustomException;
 import application.model.User;
 import application.repository.UserRepository;
@@ -30,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
 	public String signin(String username, String password) {
@@ -55,6 +64,18 @@ public class UserServiceImpl implements UserService {
 		} else {
 			throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
 		}
+	}
+
+	@Override
+	public UserResponseDTO updateInfo(UserDataDTO userInfo) {
+		User user = userRepository.findByUsername(UserInfoConstant.USER);
+		user.setCompanyName(userInfo.getCompanyName());
+		user.setEmail(userInfo.getEmail());
+		user.setAddress(userInfo.getAddress());
+		user.setPhoneNumber(userInfo.getPhoneNumber());
+		user = userRepository.save(user);
+		UserResponseDTO userDTO = modelMapper.map(user, UserResponseDTO.class);
+		return userDTO;
 	}
 
 //	@Override

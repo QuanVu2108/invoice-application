@@ -2,6 +2,8 @@ package application.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import application.dto.UserDataDTO;
+import application.dto.UserResponseDTO;
 import application.model.User;
 
 public interface UserService {
@@ -11,5 +13,7 @@ public interface UserService {
 	Object whoami(HttpServletRequest req);
 
 	String signup(User admin);
+
+	UserResponseDTO updateInfo(UserDataDTO userInfo);
 
 }

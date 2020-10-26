@@ -10,45 +10,52 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="invoice")
+@Table(name = "invoice")
 public class Invoice {
 
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	  @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
-	  @Column(name = "invoice_code", unique = true, nullable = false)
-	  private String invoiceCode;
+	@Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
+	@Column(name = "invoice_code", unique = true, nullable = false)
+	private String invoiceCode;
 
-	  @Column(name = "customer_name")
-	  private String customerName;
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+	private Customer customer;
 
-	  @Column(name = "customer_email")
-	  private String customerEmail;
-	  
-	  @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	  private List<Product> productList;
-	  
-	  @Column(name = "sub_total")
-	  private Long subTotal;
+	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Product> productList;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "amount_id", referencedColumnName = "id")
+	private Amount amount;
 
-	  @Column(name = "tax")
-	  private Long tax;
+	@Column(name = "note")
+	private String note;
 
-	  @Column(name = "discount")
-	  private Long discount;
+	@Column(name = "payment_term")
+	private String paymentTerm;
+	
+	@Column(name = "status")
+	private String status;
 
-	  @Column(name = "total")
-	  private Long total;
+	@Column(name = "created_date")
+	private Long createdDate;
 
-	  @Column(name = "created_date")
-	  private Long createdDate;
+	@Column(name = "issue_date")
+	private Long issueDate;
+
+	@Column(name = "due_date")
+	private Long dueDate;
 
 	public Long getId() {
 		return id;
@@ -66,52 +73,12 @@ public class Invoice {
 		this.invoiceCode = invoiceCode;
 	}
 
-	public String getCustomerName() {
-		return customerName;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-
-	public String getCustomerEmail() {
-		return customerEmail;
-	}
-
-	public void setCustomerEmail(String customerEmail) {
-		this.customerEmail = customerEmail;
-	}
-
-	public Long getSubTotal() {
-		return subTotal;
-	}
-
-	public void setSubTotal(Long subTotal) {
-		this.subTotal = subTotal;
-	}
-
-	public Long getTax() {
-		return tax;
-	}
-
-	public void setTax(Long tax) {
-		this.tax = tax;
-	}
-
-	public Long getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(Long discount) {
-		this.discount = discount;
-	}
-
-	public Long getTotal() {
-		return total;
-	}
-
-	public void setTotal(Long total) {
-		this.total = total;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public List<Product> getProductList() {
@@ -122,12 +89,60 @@ public class Invoice {
 		this.productList = productList;
 	}
 
+	public Amount getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Amount amount) {
+		this.amount = amount;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public String getPaymentTerm() {
+		return paymentTerm;
+	}
+
+	public void setPaymentTerm(String paymentTerm) {
+		this.paymentTerm = paymentTerm;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public Long getCreatedDate() {
 		return createdDate;
 	}
 
 	public void setCreatedDate(Long createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public Long getIssueDate() {
+		return issueDate;
+	}
+
+	public void setIssueDate(Long issueDate) {
+		this.issueDate = issueDate;
+	}
+
+	public Long getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Long dueDate) {
+		this.dueDate = dueDate;
 	}
 
 }
