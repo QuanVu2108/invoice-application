@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,20 +23,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import application.dto.InvoiceDTO;
 import application.dto.InvoiceInputDTO;
-import application.dto.ProductDataDTO;
 import application.exception.InvoiceException;
+import application.model.Customer;
 import application.model.Invoice;
 import application.repository.InvoiceRepository;
 import application.service.InvoiceService;
-import application.service.impl.InvoiceServiceImpl;
 import application.utils.GeneratePdfReport;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/invoices")
@@ -46,11 +45,15 @@ public class InvoiceController {
 	@Autowired
 	private InvoiceRepository invoiceRepository;
 
+	@Autowired
+	public JavaMailSender emailSender;
+
 	@PostMapping("/create")
 	public String create(//
 			@ApiParam("invoiceCode") @RequestBody InvoiceInputDTO invoiceInput) {
 		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode());
-		if(invoiceOptional.isPresent()) throw new InvoiceException("invoiceCode supplied is exits", HttpStatus.UNPROCESSABLE_ENTITY);
+		if (invoiceOptional.isPresent())
+			throw new InvoiceException("invoiceCode supplied is exits", HttpStatus.UNPROCESSABLE_ENTITY);
 		return invoiceService.create(invoiceInput);
 	}
 
@@ -58,24 +61,25 @@ public class InvoiceController {
 	public String update(//
 			@ApiParam("invoiceCode") @RequestBody InvoiceInputDTO invoiceInput) {
 		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode());
-		if(!invoiceOptional.isPresent()) throw new InvoiceException("invoiceCode supplied is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
+		if (!invoiceOptional.isPresent())
+			throw new InvoiceException("invoiceCode supplied is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
 		return invoiceService.update(invoiceInput);
 	}
 
 	@GetMapping("/get-all")
 	public List<InvoiceDTO> getAll(//
-			@ApiParam("invoiceCode") @RequestParam(name = "invoiceCode", required = false, defaultValue = "") String invoiceCode
-			) {
+			@ApiParam("invoiceCode") @RequestParam(name = "invoiceCode", required = false, defaultValue = "") String invoiceCode) {
 		return invoiceService.getAll(invoiceCode);
 	}
 
 	@RequestMapping(value = "/export-pdf", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<InputStreamResource> invoiceReport(
-			@ApiParam("invoiceId") @RequestParam(name = "invoiceId", required = true) Long invoiceId
-			) throws IOException {
+			@ApiParam("invoiceId") @RequestParam(name = "invoiceId", required = true) Long invoiceId)
+			throws IOException {
 
 		Optional<Invoice> invoiceOptional = invoiceRepository.findById(invoiceId);
-		if(!invoiceOptional.isPresent())  throw new InvoiceException("invoice is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
+		if (!invoiceOptional.isPresent())
+			throw new InvoiceException("invoice is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
 		Invoice invoice = invoiceOptional.get();
 
 		ByteArrayInputStream bis = GeneratePdfReport.invoiceReport(invoice);
@@ -86,4 +90,5 @@ public class InvoiceController {
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
+
 }

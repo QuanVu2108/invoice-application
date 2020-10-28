@@ -2,11 +2,10 @@ package application.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
+import javax.mail.internet.MimeMessage;
 
 import application.dto.InvoiceDTO;
 import application.dto.InvoiceInputDTO;
-import application.dto.ProductDataDTO;
 
 public interface InvoiceService {
 

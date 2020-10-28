@@ -9,8 +9,8 @@ public class UserDataDTO {
 
 	@ApiModelProperty(position = 2)
 	private String companyName;
-	@ApiModelProperty(position = 3)
-	private String email;
+//	@ApiModelProperty(position = 3)
+//	private String email;
 	@ApiModelProperty(position = 4)
 	private String address;
 	@ApiModelProperty(position = 5)
@@ -24,13 +24,13 @@ public class UserDataDTO {
 		this.companyName = companyName;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
+//	public String getEmail() {
+//		return email;
+//	}
+//
+//	public void setEmail(String email) {
+//		this.email = email;
+//	}
 
 	public String getAddress() {
 		return address;

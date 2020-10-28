@@ -14,6 +14,20 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+  mail:
+    host: smtp.gmail.com
+    username: freelancegtc@gmail.com
+    password: makegtcgreate
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+      
+    
 server:
    port: 8080 # This is the default port anyway, but you can change it here
 

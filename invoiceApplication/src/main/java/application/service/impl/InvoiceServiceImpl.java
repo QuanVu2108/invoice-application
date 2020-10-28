@@ -1,27 +1,27 @@
 package application.service.impl;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Properties;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 
+import application.constant.UserInfoConstant;
 import application.dto.InvoiceDTO;
 import application.dto.InvoiceInputDTO;
 import application.dto.ProductDataDTO;
+import application.exception.InvoiceException;
 import application.model.Amount;
 import application.model.Customer;
 import application.model.Invoice;

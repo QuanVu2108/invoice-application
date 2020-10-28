@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 	public UserResponseDTO updateInfo(UserDataDTO userInfo) {
 		User user = userRepository.findByUsername(UserInfoConstant.USER);
 		user.setCompanyName(userInfo.getCompanyName());
-		user.setEmail(userInfo.getEmail());
+//		user.setEmail(userInfo.getEmail());
 		user.setAddress(userInfo.getAddress());
 		user.setPhoneNumber(userInfo.getPhoneNumber());
 		user = userRepository.save(user);

@@ -13,7 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<start-class>murraco.JwtAuthServiceApp</start-class>
+		<start-class>application.JwtAuthServiceApp</start-class>
 	</properties>
 
 	<parent>
@@ -93,6 +93,10 @@
 			<version>4.2.2</version>
 		</dependency>
 		
+		 <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>
