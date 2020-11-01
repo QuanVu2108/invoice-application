@@ -4,21 +4,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import application.dto.SignInDTO;
+import application.dto.TokenDTO;
 import application.dto.UserDataDTO;
 import application.dto.UserResponseDTO;
-import application.model.User;
 import application.service.UserService;
-import application.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,14 +41,18 @@ public class UserController {
 	@ApiResponses(value = { //
 			@ApiResponse(code = 400, message = "Something went wrong"), //
 			@ApiResponse(code = 422, message = "Invalid username/password supplied") })
-	public String login(//
-			@ApiParam("Username") @RequestParam String username, //
-			@ApiParam("Password") @RequestParam String password) {
-		return userService.signin(username, password);
+	public ResponseEntity<TokenDTO> login(//
+			@ApiParam("Username") @RequestBody SignInDTO signIn) {
+		String userName = signIn.getUserName();
+		String password = signIn.getPassword();
+		String token = userService.signin(userName, password);
+		TokenDTO tokenDTO = new TokenDTO();
+		tokenDTO.setToken(token);
+		return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/me")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @CrossOrigin
 	@ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = {
 			@Authorization(value = "apiKey") })
 	@ApiResponses(value = { //
@@ -65,9 +68,10 @@ public class UserController {
 	@ApiResponses(value = { //
 			@ApiResponse(code = 400, message = "Something went wrong"), //
 			@ApiResponse(code = 422, message = "Invalid username/password supplied") })
-	public UserResponseDTO updateInfo(//
+	public ResponseEntity<UserResponseDTO> updateInfo(//
 			@ApiParam("Username") @RequestBody UserDataDTO userInfo) {
-		return userService.updateInfo(userInfo);
+		UserResponseDTO userResponseDTO = userService.updateInfo(userInfo); 
+		return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
 	}
 
 //  @PostMapping("/signup")

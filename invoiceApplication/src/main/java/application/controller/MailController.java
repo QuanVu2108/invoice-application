@@ -3,16 +3,18 @@ package application.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import application.dto.MailInfo;
 import application.exception.InvoiceException;
-import application.model.Customer;
 import application.model.Invoice;
 import application.repository.InvoiceRepository;
 import application.service.MailService;
@@ -30,38 +32,41 @@ public class MailController {
 	@Autowired
 	private InvoiceRepository invoiceRepository;
 
-	@GetMapping("/send-mail")
-	public String sendMail(//
-			@ApiParam("invoiceId") @RequestParam(name = "invoiceId", required = false, defaultValue = "") Long invoiceId) {
-		String customerEmail = getCustomerMail(invoiceId);
+	@PostMapping("/send-mail")
+	public ResponseEntity<String> sendMail(//
+			@ApiParam("invoiceId") @RequestBody MailInfo mailInfo) {
+		Long invoiceId = mailInfo.getInvoiceId();
+		Invoice invoice = getInvoice(invoiceId);
+		String customerEmail = invoice.getCustomer().getCustomerEmail();
+		String invoiceCode = invoice.getInvoiceCode();
 		try {
-			mailService.sendMail(customerEmail);
+			mailService.sendMail(invoiceCode, customerEmail);
 		} catch (MailException mailException) {
 			System.out.println(mailException);
 		}
-		return "Congratulations! Your mail has been send to the user.";
+		return new ResponseEntity<>("OK", HttpStatus.OK);
 	}
 
-	@GetMapping("/send-mail-attachment")
-	public String sendMailAttachment(
-			@ApiParam("invoiceId") @RequestParam(name = "invoiceId", required = false, defaultValue = "") Long invoiceId,
-			@ApiParam("file") @RequestParam(name = "file", required = false, defaultValue = "") InputStreamSource file) {
-		String customerEmail = getCustomerMail(invoiceId);
+	@PostMapping("/send-mail-attachment")
+	public ResponseEntity<String> sendMailAttachment(
+			@ApiParam("invoiceId") @RequestParam(name = "invoiceId", required = true) Long invoiceId,
+			@ApiParam("inputFile") @RequestBody MultipartFile inputFile) {
+		Invoice invoice = getInvoice(invoiceId);
+		String customerEmail = invoice.getCustomer().getCustomerEmail();
+		String invoiceCode = invoice.getInvoiceCode();
 		try {
-			mailService.sendMailAttachment(customerEmail, file);
+			mailService.sendMailAttachment(invoiceCode, customerEmail, inputFile);
 		} catch (MailException mailException) {
 			System.out.println(mailException);
 		}
-		return "Congratulations! Your mail has been send to the user.";
+		return new ResponseEntity<>("OK", HttpStatus.OK);
 	}
 
-	public String getCustomerMail(Long invoiceId) {
+	public Invoice getInvoice(Long invoiceId) {
 		Optional<Invoice> invoiceOptional = invoiceRepository.findById(invoiceId);
 		if (!invoiceOptional.isPresent())
 			throw new InvoiceException("invoice is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
 		Invoice invoice = invoiceOptional.get();
-		Customer customer = invoice.getCustomer();
-		String customerEmail = customer.getCustomerEmail();
-		return customerEmail;
+		return invoice;
 	}
 }

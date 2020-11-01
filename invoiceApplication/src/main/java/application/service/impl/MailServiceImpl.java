@@ -4,12 +4,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import application.service.MailService;
 
@@ -24,7 +24,7 @@ public class MailServiceImpl implements MailService {
     }
     
 	@Override
-	public void sendMail(String customerEmail) throws MailException {
+	public void sendMail(String invoiceCode, String customerEmail) throws MailException {
 
 		/*
 		 * This JavaMailSender Interface is used to send Mail in Spring Boot. This
@@ -46,15 +46,15 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendMailAttachment(String customerEmail, InputStreamSource file) {
+	public void sendMailAttachment(String invoiceCode, String customerEmail, MultipartFile inputFile) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setTo(customerEmail);
-			helper.setSubject("Testing Mail API with Attachment");
+			helper.setSubject("Invoice " + invoiceCode);
 			helper.setText("Please find the attached document below.");
-			helper.addAttachment("invoice", file);
+			helper.addAttachment(invoiceCode + ".pdf", inputFile);
 			javaMailSender.send(message);
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block

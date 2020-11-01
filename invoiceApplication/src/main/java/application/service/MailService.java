@@ -1,11 +1,11 @@
 package application.service;
 
-import org.springframework.core.io.InputStreamSource;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MailService {
 	
-	void sendMail(String customerEmail);
+	void sendMail(String invoiceCode, String customerEmail);
 
-	void sendMailAttachment(String customerEmail, InputStreamSource file);
+	void sendMailAttachment(String invoiceCode, String customerEmail, MultipartFile inputFile);
 
 }

@@ -9,9 +9,9 @@ import application.dto.InvoiceInputDTO;
 
 public interface InvoiceService {
 
-	String create(InvoiceInputDTO invoiceInput);
+	InvoiceDTO create(InvoiceInputDTO invoiceInput);
 
-	String update(InvoiceInputDTO invoiceInput);
+	InvoiceDTO update(InvoiceInputDTO invoiceInput);
 
 	List<InvoiceDTO> getAll(String invoiceCode);
 

@@ -51,7 +51,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	private ProductRepository productRepository;
 
 	@Override
-	public String create(InvoiceInputDTO invoiceInput) {
+	public InvoiceDTO create(InvoiceInputDTO invoiceInput) {
         LocalDateTime localDateTime = LocalDateTime.now();
         ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
         Long date = zdt.toInstant().toEpochMilli();
@@ -83,11 +83,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 				productRepository.save(product);
 			}
 		}
-		return "OK";
+		InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+		return invoiceDTO;
 	}
 
 	@Override
-	public String update(InvoiceInputDTO invoiceInput) {
+	public InvoiceDTO update(InvoiceInputDTO invoiceInput) {
 		Invoice invoice = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode()).get();
 		//customer
 		Customer customerOld = invoice.getCustomer();
@@ -132,7 +133,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 		invoice.setDueDate(invoiceInput.getDueDate());
 		invoiceRepository.save(invoice);
 		
-		return "OK";
+		InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+		
+		return invoiceDTO;
 	}
 
 	@Override
