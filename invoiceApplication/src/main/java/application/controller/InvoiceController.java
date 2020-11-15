@@ -57,7 +57,7 @@ public class InvoiceController {
 	@PostMapping("/update")
 	public ResponseEntity<InvoiceDTO> update(//
 			@ApiParam("invoiceCode") @RequestBody InvoiceInputDTO invoiceInput) {
-		Optional<Invoice> invoiceOptional = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode());
+		Optional<Invoice> invoiceOptional = invoiceRepository.findById(invoiceInput.getId());
 		if (!invoiceOptional.isPresent())
 			throw new InvoiceException("invoiceCode supplied is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
 		InvoiceDTO invoiceDTO = invoiceService.update(invoiceInput); 
@@ -70,6 +70,13 @@ public class InvoiceController {
 		return invoiceService.getAll(invoiceCode);
 	}
 
+	@GetMapping("/get-invoice-detail")
+	public InvoiceDTO getInvoiceDetail(//
+			@ApiParam("id") @RequestParam(name = "id", required = false) Long id) {
+		InvoiceDTO invoiceDTO = invoiceService.getInvoiceDetail(id);
+		return invoiceDTO;
+	}
+	
 //	@RequestMapping(value = "/export-pdf", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
 //	public ResponseEntity<InputStreamResource> invoiceReport(
 //			@ApiParam("invoiceId") @RequestParam(name = "invoiceId", required = true) Long invoiceId)

@@ -3,6 +3,7 @@ package application.dto;
 import java.util.List;
 
 public class InvoiceInputDTO {
+	private Long id;
 	private String invoiceCode;
 	private CustomerDTO customer;
 	private List<ProductDataDTO> productList;
@@ -11,6 +12,14 @@ public class InvoiceInputDTO {
 	private AmountDTO amount;
 	private Long issueDate;
 	private Long dueDate;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getInvoiceCode() {
 		return invoiceCode;

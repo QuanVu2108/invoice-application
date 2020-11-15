@@ -5,19 +5,13 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import application.constant.UserInfoConstant;
 import application.dto.InvoiceDTO;
 import application.dto.InvoiceInputDTO;
 import application.dto.ProductDataDTO;
@@ -89,7 +83,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 	@Override
 	public InvoiceDTO update(InvoiceInputDTO invoiceInput) {
-		Invoice invoice = invoiceRepository.findByInvoiceCode(invoiceInput.getInvoiceCode()).get();
+		Invoice invoice = invoiceRepository.findById(invoiceInput.getId()).get();
 		//customer
 		Customer customerOld = invoice.getCustomer();
         Customer customerInput = modelMapper.map(invoiceInput.getCustomer(), Customer.class);
@@ -128,6 +122,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		}
 		invoice.setProductList(productInputList);
 
+		invoice.setInvoiceCode(invoiceInput.getInvoiceCode());
 		invoice.setNote(invoiceInput.getNote());
 		invoice.setIssueDate(invoiceInput.getIssueDate());;
 		invoice.setDueDate(invoiceInput.getDueDate());
@@ -143,10 +138,23 @@ public class InvoiceServiceImpl implements InvoiceService {
 		List<Invoice> invoices = invoiceRepository.findListByInvoiceCode(invoiceCode);
 		List<InvoiceDTO> invoiceDTOList = new ArrayList<InvoiceDTO>(); 
 		for(Invoice invoice: invoices) {
+			List<Product> productList = productRepository.findByInvoiceId(invoice.getId());
+			invoice.setProductList(productList);
 			InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
 			invoiceDTOList.add(invoiceDTO);
 		}
 		return invoiceDTOList;
+	}
+
+	@Override
+	public InvoiceDTO getInvoiceDetail(Long id) {
+		Optional<Invoice> invoiceOptional = invoiceRepository.findById(id);
+		if(!invoiceOptional.isPresent()) throw new InvoiceException("invoiceId supplied is not exits", HttpStatus.UNPROCESSABLE_ENTITY);
+		Invoice invoice = invoiceOptional.get();
+		List<Product> productList = productRepository.findByInvoiceId(invoice.getId());
+		invoice.setProductList(productList);
+		InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+		return invoiceDTO;
 	}
 
 }

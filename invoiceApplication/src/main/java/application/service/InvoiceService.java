@@ -15,4 +15,6 @@ public interface InvoiceService {
 
 	List<InvoiceDTO> getAll(String invoiceCode);
 
+	InvoiceDTO getInvoiceDetail(Long id);
+
 }

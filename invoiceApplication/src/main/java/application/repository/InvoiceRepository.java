@@ -19,7 +19,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>  {
 			+ "AND customer_email LIKE %:customerEmail% ", nativeQuery = true)
 	List<Invoice> filterParam(@Param("invoiceCode") String invoiceCode, @Param("customerName") String customerName,@Param("customerEmail")  String customerEmail);
 
-	@Query(value = "SELECT * FROM invoice WHERE invoice_code LIKE %:invoiceCode% ", nativeQuery = true)
-	List<Invoice> findListByInvoiceCode(String invoiceCode);
+	@Query(value = "SELECT * FROM invoice WHERE invoice_code LIKE %:invoiceCode%", nativeQuery = true)
+	List<Invoice> findListByInvoiceCode(@Param("invoiceCode") String invoiceCode);
 
 }
