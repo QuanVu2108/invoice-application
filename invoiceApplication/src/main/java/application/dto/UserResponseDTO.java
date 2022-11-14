@@ -2,7 +2,7 @@ package application.dto;
 
 import java.util.List;
 
-import application.model.Role;
+import application.domain.Role;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UserResponseDTO {

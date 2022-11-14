@@ -1,6 +1,6 @@
 package application.dto;
 
-public class ProductDataDTO {
+public class ProductDTO {
 	private String name;
 	private Long price;
 	private String description;

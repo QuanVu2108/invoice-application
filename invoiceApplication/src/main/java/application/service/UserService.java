@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import application.dto.UserDataDTO;
 import application.dto.UserResponseDTO;
-import application.model.User;
+import application.domain.User;
 
 public interface UserService {
 

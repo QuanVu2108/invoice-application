@@ -6,7 +6,7 @@ public class InvoiceInputDTO {
 	private Long id;
 	private String invoiceCode;
 	private CustomerDTO customer;
-	private List<ProductDataDTO> productList;
+	private List<ProductDTO> productList;
 	private String note;
 	private String paymentTerm;
 	private AmountDTO amount;
@@ -37,11 +37,11 @@ public class InvoiceInputDTO {
 		this.customer = customer;
 	}
 
-	public List<ProductDataDTO> getProductList() {
+	public List<ProductDTO> getProductList() {
 		return productList;
 	}
 
-	public void setProductList(List<ProductDataDTO> productList) {
+	public void setProductList(List<ProductDTO> productList) {
 		this.productList = productList;
 	}
 

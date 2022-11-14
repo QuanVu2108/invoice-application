@@ -4,7 +4,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import application.model.User;
+import application.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

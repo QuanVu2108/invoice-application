@@ -1,32 +1,25 @@
 package application.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import application.dto.InvoiceDTO;
 import application.dto.InvoiceInputDTO;
 import application.exception.InvoiceException;
-import application.model.Invoice;
+import application.domain.Invoice;
 import application.repository.InvoiceRepository;
 import application.service.InvoiceService;
-import application.utils.GeneratePdfReport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 

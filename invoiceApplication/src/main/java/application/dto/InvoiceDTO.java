@@ -2,13 +2,11 @@ package application.dto;
 
 import java.util.List;
 
-import application.model.Product;
-
 public class InvoiceDTO {
 	private Long id;
 	private String invoiceCode;
 	private CustomerDTO customer;
-	private List<ProductDataDTO> productList;
+	private List<ProductDTO> productList;
 	private AmountDTO amount;
 	private String note;
 	private String paymentTerm;
@@ -39,11 +37,11 @@ public class InvoiceDTO {
 		this.customer = customer;
 	}
 
-	public List<ProductDataDTO> getProductList() {
+	public List<ProductDTO> getProductList() {
 		return productList;
 	}
 
-	public void setProductList(List<ProductDataDTO> productList) {
+	public void setProductList(List<ProductDTO> productList) {
 		this.productList = productList;
 	}
 

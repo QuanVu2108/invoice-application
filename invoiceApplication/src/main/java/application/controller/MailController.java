@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import application.dto.MailInfo;
 import application.exception.InvoiceException;
-import application.model.Invoice;
+import application.domain.Invoice;
 import application.repository.InvoiceRepository;
 import application.service.MailService;
 import io.swagger.annotations.Api;

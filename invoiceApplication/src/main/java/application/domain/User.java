@@ -1,4 +1,4 @@
-package application.model;
+package application.domain;
 
 import java.util.List;
 

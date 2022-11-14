@@ -7,16 +7,14 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPHeaderCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import application.model.Invoice;
-import application.model.Product;
+import application.domain.Invoice;
+import application.domain.Product;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

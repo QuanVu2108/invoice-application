@@ -1,4 +1,4 @@
-package application.model;
+package application.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 

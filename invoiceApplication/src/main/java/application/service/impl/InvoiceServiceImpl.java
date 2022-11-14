@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import application.service.mapper.AmountMapper;
+import application.service.mapper.CustomerMapper;
+import application.service.mapper.InvoiceMapper;
+import application.service.mapper.ProductMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import application.dto.InvoiceDTO;
 import application.dto.InvoiceInputDTO;
-import application.dto.ProductDataDTO;
+import application.dto.ProductDTO;
 import application.exception.InvoiceException;
-import application.model.Amount;
-import application.model.Customer;
-import application.model.Invoice;
-import application.model.Product;
+import application.domain.Amount;
+import application.domain.Customer;
+import application.domain.Invoice;
+import application.domain.Product;
 import application.repository.AmountRepository;
 import application.repository.CustomerRepository;
 import application.repository.InvoiceRepository;
@@ -29,20 +31,32 @@ import application.service.InvoiceService;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
-	@Autowired
-	private ModelMapper modelMapper;
+	private final CustomerMapper customerMapper;
 
-	@Autowired
-	private InvoiceRepository invoiceRepository;
+	private final AmountMapper amountMapper;
 
-	@Autowired
-	private CustomerRepository customerRepository;
+	private final ProductMapper productMapper;
 
-	@Autowired
-	private AmountRepository amountRepository;
+	private final InvoiceMapper invoiceMapper;
 
-	@Autowired
-	private ProductRepository productRepository;
+	private final InvoiceRepository invoiceRepository;
+
+	private final CustomerRepository customerRepository;
+
+	private final AmountRepository amountRepository;
+
+	private final ProductRepository productRepository;
+
+	public InvoiceServiceImpl(CustomerMapper customerMapper, AmountMapper amountMapper, ProductMapper productMapper, InvoiceMapper invoiceMapper, InvoiceRepository invoiceRepository, CustomerRepository customerRepository, AmountRepository amountRepository, ProductRepository productRepository) {
+		this.customerMapper = customerMapper;
+		this.amountMapper = amountMapper;
+		this.productMapper = productMapper;
+		this.invoiceMapper = invoiceMapper;
+		this.invoiceRepository = invoiceRepository;
+		this.customerRepository = customerRepository;
+		this.amountRepository = amountRepository;
+		this.productRepository = productRepository;
+	}
 
 	@Override
 	public InvoiceDTO create(InvoiceInputDTO invoiceInput) {
@@ -50,11 +64,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
         Long date = zdt.toInstant().toEpochMilli();
         
-        Customer customer = modelMapper.map(invoiceInput.getCustomer(), Customer.class);
+        Customer customer = customerMapper.toSource(invoiceInput.getCustomer());
         customer.setActive(true);
         customer = customerRepository.save(customer);
         
-        Amount amount = modelMapper.map(invoiceInput.getAmount(), Amount.class);
+        Amount amount = amountMapper.toSource(invoiceInput.getAmount());
         amount.setActive(true);
         amount = amountRepository.save(amount);
         
@@ -68,16 +82,16 @@ public class InvoiceServiceImpl implements InvoiceService {
 		invoice.setDueDate(invoiceInput.getDueDate());
 		invoiceRepository.save(invoice);
 
-		List<ProductDataDTO> listProduct = invoiceInput.getProductList();
+		List<ProductDTO> listProduct = invoiceInput.getProductList();
 		if (listProduct.size() != 0) {
-			for (ProductDataDTO productData : listProduct) {
-				Product product = modelMapper.map(productData, Product.class);
+			for (ProductDTO productData : listProduct) {
+				Product product = productMapper.toSource(productData);
 				product.setInvoice(invoice);
 				product.setActive(true);
 				productRepository.save(product);
 			}
 		}
-		InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+		InvoiceDTO invoiceDTO = invoiceMapper.toTarget(invoice);
 		return invoiceDTO;
 	}
 
@@ -86,7 +100,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		Invoice invoice = invoiceRepository.findById(invoiceInput.getId()).get();
 		//customer
 		Customer customerOld = invoice.getCustomer();
-        Customer customerInput = modelMapper.map(invoiceInput.getCustomer(), Customer.class);
+        Customer customerInput = customerMapper.toSource(invoiceInput.getCustomer());
         if(!customerOld.equals(customerInput)) {
         	customerOld.setActive(false);
         	customerRepository.save(customerOld);
@@ -96,7 +110,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
       //amount
         Amount amountOld = invoice.getAmount();
-        Amount amountInput = modelMapper.map(invoiceInput.getAmount(), Amount.class);
+        Amount amountInput = amountMapper.toSource(invoiceInput.getAmount());
         if(!amountOld.equals(amountInput)) {
         	amountOld.setActive(false);
         	amountRepository.save(amountOld);
@@ -110,11 +124,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 			product.setActive(false);
 			productRepository.save(product);
 		}
-		List<Product> productInputList = new ArrayList<Product>();
-		List<ProductDataDTO> listProductDTOinput = invoiceInput.getProductList();
-		for(ProductDataDTO productDTO: listProductDTOinput) {
-			productInputList.add(modelMapper.map(productDTO, Product.class));
-		}
+		List<Product> productInputList = productMapper.toSource(invoiceInput.getProductList());
 		for(Product product: productInputList) {
 			product.setActive(true);
 			product.setInvoice(invoice);
@@ -128,7 +138,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		invoice.setDueDate(invoiceInput.getDueDate());
 		invoiceRepository.save(invoice);
 		
-		InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+		InvoiceDTO invoiceDTO = invoiceMapper.toTarget(invoice);
 		
 		return invoiceDTO;
 	}
@@ -140,7 +150,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		for(Invoice invoice: invoices) {
 			List<Product> productList = productRepository.findByInvoiceId(invoice.getId());
 			invoice.setProductList(productList);
-			InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+			InvoiceDTO invoiceDTO = invoiceMapper.toTarget(invoice);
 			invoiceDTOList.add(invoiceDTO);
 		}
 		return invoiceDTOList;
@@ -153,7 +163,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		Invoice invoice = invoiceOptional.get();
 		List<Product> productList = productRepository.findByInvoiceId(invoice.getId());
 		invoice.setProductList(productList);
-		InvoiceDTO invoiceDTO = modelMapper.map(invoice, InvoiceDTO.class);
+		InvoiceDTO invoiceDTO = invoiceMapper.toTarget(invoice);
 		return invoiceDTO;
 	}
 

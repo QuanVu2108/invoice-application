@@ -1,9 +1,8 @@
 package application.service.impl;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 
+import application.service.mapper.UserMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +16,15 @@ import application.constant.UserInfoConstant;
 import application.dto.UserDataDTO;
 import application.dto.UserResponseDTO;
 import application.exception.CustomException;
-import application.model.User;
+import application.domain.User;
 import application.repository.UserRepository;
 import application.security.JwtTokenProvider;
 import application.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+	private final UserMapper userMapper;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -39,6 +40,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	public UserServiceImpl(UserMapper userMapper) {
+		this.userMapper = userMapper;
+	}
 
 	@Override
 	public String signin(String username, String password) {
@@ -74,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		user.setAddress(userInfo.getAddress());
 		user.setPhoneNumber(userInfo.getPhoneNumber());
 		user = userRepository.save(user);
-		UserResponseDTO userDTO = modelMapper.map(user, UserResponseDTO.class);
+		UserResponseDTO userDTO = userMapper.toTarget(user);
 		return userDTO;
 	}
 
